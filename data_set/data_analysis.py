@@ -31,8 +31,8 @@ def import_data():
 
     # check the numbers of samples and features
     # train_df is 1460*81, test_df is 1459*80
-    # print("The train data size before dropping Id feature is : {} ".format(train_df.shape))
-    # print("The test data size before dropping Id feature is : {} ".format(test_df.shape))
+    # print("The train data_set size before dropping Id feature is : {} ".format(train_df.shape))
+    # print("The test data_set size before dropping Id feature is : {} ".format(test_df.shape))
 
     # save the ID column
     train_ID = train_df['Id']
@@ -41,9 +41,9 @@ def import_data():
     train_df.drop('Id', axis=1, inplace=True)
     test_df.drop('Id', axis=1, inplace=True)
 
-    # check again the data size after dropping the 'Id' variable
-    # print("\nThe train data size after dropping Id feature is : {} ".format(train_df.shape))
-    # print("The test data size after dropping Id feature is : {} ".format(test_df.shape))
+    # check again the data_set size after dropping the 'Id' variable
+    # print("\nThe train data_set size after dropping Id feature is : {} ".format(train_df.shape))
+    # print("The test data_set size after dropping Id feature is : {} ".format(test_df.shape))
 
     # Data Processing
 
@@ -86,7 +86,7 @@ def import_data():
     res = stats.probplot(train_df['SalePrice'], plot=plt)
     plt.show()
     """
-    # The target variable is right skewed. As (linear) models love normally distributed data ,
+    # The target variable is right skewed. As (linear) models love normally distributed data_set ,
     # we need to transform this variable and make it more normally distributed.
 
     # normalization.
@@ -112,7 +112,7 @@ def import_data():
 
     # feature engineering.
 
-    # let's first concatenate the train and test data in the same dataFrame.
+    # let's first concatenate the train and test data_set in the same dataFrame.
 
     # drop the SalePrice label
     ntrain = train_df.shape[0]
@@ -123,7 +123,7 @@ def import_data():
     # print("all_data size is : {}".format(all_data.shape))
 
     """
-    # analyze the missing data with missing ratio
+    # analyze the missing data_set with missing ratio
     all_data_na = (all_data.isnull().sum() / len(all_data)) * 100
     all_data_na = all_data_na.drop(all_data_na[all_data_na == 0].index).sort_values(ascending=False)[:30]
     missing_data = pd.DataFrame({'Missing Ratio':all_data_na})
@@ -134,12 +134,12 @@ def import_data():
     sns.barplot(x=all_data_na.index, y=all_data_na)
     plt.xlabel('Features', fontsize=15)
     plt.ylabel('Percent of missing values', fontsize=15)
-    plt.title('Percent missing data by feature', fontsize=15)
+    plt.title('Percent missing data_set by feature', fontsize=15)
     plt.show()
     """
 
     """
-    # data correlation analysis
+    # data_set correlation analysis
     # Correlation map to see how features are correlated with SalePrice
     corrmat = train_df.corr()
     plt.subplots(figsize=(12,9))
@@ -147,22 +147,22 @@ def import_data():
     plt.show()
     """
 
-    # add the missing data
+    # add the missing data_set
 
-    # PoolQC : data description says NA means "No Pool".
+    # PoolQC : data_set description says NA means "No Pool".
     # That make sense, given the huge ratio of missing value (+99%) and majority of houses have no Pool at all in general.
     all_data["PoolQC"] = all_data["PoolQC"].fillna("None")
 
-    # MiscFeature : data description says NA means "no misc feature"
+    # MiscFeature : data_set description says NA means "no misc feature"
     all_data["MiscFeature"] = all_data["MiscFeature"].fillna("None")
 
-    # Alley : data description says NA means "no alley access"
+    # Alley : data_set description says NA means "no alley access"
     all_data["Alley"] = all_data["Alley"].fillna("None")
 
-    # Fence : data description says NA means "no fence"
+    # Fence : data_set description says NA means "no fence"
     all_data["Fence"] = all_data["Fence"].fillna("None")
 
-    # FireplaceQu : data description says NA means "no fireplace"
+    # FireplaceQu : data_set description says NA means "no fireplace"
     all_data["FireplaceQu"] = all_data["FireplaceQu"].fillna("None")
 
     # LotFrontage : Since the area of each street connected to the house property most likely
@@ -173,11 +173,11 @@ def import_data():
     all_data["LotFrontage"] = all_data.groupby("Neighborhood")["LotFrontage"].transform(
         lambda x: x.fillna(x.median()))
 
-    # GarageType, GarageFinish, GarageQual and GarageCond : Replacing missing data with None
+    # GarageType, GarageFinish, GarageQual and GarageCond : Replacing missing data_set with None
     for col in ('GarageType', 'GarageFinish', 'GarageQual', 'GarageCond'):
         all_data[col] = all_data[col].fillna('None')
 
-    # GarageYrBlt, GarageArea and GarageCars : Replacing missing data with 0 (Since No garage = no cars in such garage.)
+    # GarageYrBlt, GarageArea and GarageCars : Replacing missing data_set with 0 (Since No garage = no cars in such garage.)
     for col in ('GarageYrBlt', 'GarageArea', 'GarageCars'):
         all_data[col] = all_data[col].fillna(0)
 
@@ -205,7 +205,7 @@ def import_data():
     # We can then safely remove it.
     all_data = all_data.drop(['Utilities'], axis=1)
 
-    # Functional : data description says NA means typical
+    # Functional : data_set description says NA means typical
     all_data["Functional"] = all_data["Functional"].fillna("Typ")
 
     # Electrical : It has one NA value. Since this feature has mostly 'SBrkr', we can set that for the missing value.
