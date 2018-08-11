@@ -56,7 +56,7 @@ Task_name
     README.md
 ```
 
-
+In each py-files, i prefer OOP coding rather than func-based coding.
 
 ## 8. Reference
 
