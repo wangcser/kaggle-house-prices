@@ -6,6 +6,7 @@ from scipy.stats import norm, skew
 
 from sklearn.preprocessing import LabelEncoder
 
+
 def import_data():
     # check the files available in the directory.
     data_path = '/media/super/Dev Data/ml_data_set/Kaggle_house_price'
