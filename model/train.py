@@ -16,7 +16,7 @@ def main():
     # Of course we could easily add more models in the mix.
     averaged_models = AveragingModels(models=(models.ENet, models.GBoost, models.KRR, models.lasso))
     score = models.rmsle_cv(averaged_models)
-    print("Averaged base models score: {:.4f} ({:.4f})\n".format(score.mean(), score.std()))
+    print("Averaged base models score: {:.4f} ({:.4f})".format(score.mean(), score.std()))
 
     # 3. meta-average model test.
     # To make the two approaches comparable (by using the same number of models),
@@ -46,12 +46,14 @@ def main():
     models.model_lgb.fit(models.train, models.y_train)
     lgb_train_pred = models.model_lgb.predict(models.train)
     lgb_pred = np.expm1(models.model_lgb.predict(models.test.values))
-    print("LightGBM model train rmsle:", stacked_averaged_models.rmsle(models.y_train, lgb_train_pred))
+    print("LightGBM train rmsle:", stacked_averaged_models.rmsle(models.y_train, lgb_train_pred))
+
+    # cal the ensemble train rmsle
+    ensemble_train = stacked_train_pred * 0.8 + xgb_train_pred * 0.1 + lgb_train_pred * 0.1
+    print("RMSLE score on train data_set:", stacked_averaged_models.rmsle(models.y_train, ensemble_train))
 
     # 5. Ensemble prediction
     ensemble = stacked_pred * 0.8 + xgb_pred * 0.1 + lgb_pred * 0.1
-
-    print("RMSLE score on train data_set:", stacked_averaged_models.rmsle(models.y_train, ensemble))
 
     # 6. submission
     sub = pd.DataFrame()

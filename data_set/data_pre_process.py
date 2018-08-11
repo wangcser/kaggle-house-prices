@@ -43,7 +43,8 @@ def import_data():
     # add the missing data_set
 
     # PoolQC : data_set description says NA means "No Pool".
-    # That make sense, given the huge ratio of missing value (+99%) and majority of houses have no Pool at all in general.
+    # That make sense,
+    # given the huge ratio of missing value (+99%) and majority of houses have no Pool at all in general.
     all_data["PoolQC"] = all_data["PoolQC"].fillna("None")
 
     # MiscFeature : data_set description says NA means "no misc feature"
