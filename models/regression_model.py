@@ -1,4 +1,4 @@
-# model
+# models
 from sklearn.linear_model import ElasticNet, Lasso, BayesianRidge, LassoLarsIC
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.kernel_ridge import KernelRidge
@@ -24,9 +24,9 @@ class BaseModel:
         # validation args
         self.n_folds = 5
 
-        """base model"""
+        """base models"""
 
-        # LASSO Regression: This model may be very sensitive to outliers
+        # LASSO Regression: This models may be very sensitive to outliers
         #                   So we need to made it more robust on them
         #                   For that we use the sk-learn's Robustscaler() method on pipeline
         self.lasso = make_pipeline(RobustScaler(), Lasso(alpha=0.0005, random_state=1))
@@ -68,7 +68,7 @@ class BaseModel:
                                            feature_fraction_seed=9, bagging_seed=9,
                                            )
 
-        # model list
+        # models list
         self.models = None
 
     def rmsle_cv(self, model):
@@ -77,7 +77,7 @@ class BaseModel:
         We use the cross_val_score function of Sk-learn.
         However this function has not a shuffle attribute,
         we add then one line of code, in order to shuffle the data set prior to cross-validation
-        :param model: input single model
+        :param model: input single models
         :return: rmsle
         """
         kf = KFold(self.n_folds, shuffle=True, random_state=42).get_n_splits(self.train.values)
@@ -88,7 +88,7 @@ class BaseModel:
 
     def base_model_score(self):
         """
-        cal the base model score on cv set.
+        cal the base models score on cv set.
         :return: None
         """
         lasso_score = self.rmsle_cv(self.lasso)
@@ -115,7 +115,7 @@ class AveragingModels(BaseEstimator, RegressorMixin, TransformerMixin):
     Stacking models
     simplest stacking approach: averaging base models -> voting
     - We begin with this simple approach of averaging base models.
-    - We build a new class to extend sk-learn with our model
+    - We build a new class to extend sk-learn with our models
       and also to leverage encapsulation and code reuse (inheritance)
     """
     def __init__(self, models):
@@ -128,7 +128,7 @@ class AveragingModels(BaseEstimator, RegressorMixin, TransformerMixin):
         :param y:
         :return: average models itself.
         """
-        self.models_ = [clone(x) for x in self.models]  # model list
+        self.models_ = [clone(x) for x in self.models]  # models list
 
         # train cloned base models
         for model in self.models_:
@@ -149,7 +149,7 @@ class AveragingModels(BaseEstimator, RegressorMixin, TransformerMixin):
 
 class StackingAveragedModels(BaseEstimator, RegressorMixin, TransformerMixin):
     """
-    less simple Stacking: adding a meta-model
+    less simple Stacking: adding a meta-models
     """
     def __init__(self, base_models, meta_model, n_folds=5):
         self.base_models = base_models
@@ -168,7 +168,7 @@ class StackingAveragedModels(BaseEstimator, RegressorMixin, TransformerMixin):
         kfold = KFold(n_splits=self.n_folds, shuffle=True, random_state=156)
 
         # Train cloned base models then create out-of-fold predictions
-        # that are needed to train the cloned meta-model
+        # that are needed to train the cloned meta-models
         out_of_fold_predictions = np.zeros((X.shape[0], len(self.base_models)))
         for i, model in enumerate(self.base_models):
             for train_index, holdout_index in kfold.split(X, y):
@@ -178,14 +178,14 @@ class StackingAveragedModels(BaseEstimator, RegressorMixin, TransformerMixin):
                 y_pred = instance.predict(X[holdout_index])
                 out_of_fold_predictions[holdout_index, i] = y_pred
 
-        # Now train the cloned meta-model using the out-of-fold predictions as new feature
+        # Now train the cloned meta-models using the out-of-fold predictions as new feature
         self.meta_model_.fit(out_of_fold_predictions, y)
         return self
 
     def predict(self, X):
         """
         Do the predictions of all base models on the test data_set and use the averaged predictions as
-        meta-features for the final prediction which is done by the meta-model
+        meta-features for the final prediction which is done by the meta-models
         :param X:
         :return:
         """
